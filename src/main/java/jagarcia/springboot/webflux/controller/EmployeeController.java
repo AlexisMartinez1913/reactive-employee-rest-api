@@ -21,4 +21,12 @@ public class EmployeeController {
     public Mono<EmployeeDto> saveEmployee(@RequestBody EmployeeDto employeeDto) {
         return employeeService.saveEmployee(employeeDto);
     }
+
+    //build reactive get single employee REST API
+    @GetMapping("{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public Mono<EmployeeDto> getEmployee(@PathVariable("id") String employeeId) {
+        return employeeService.getEmployee(employeeId);
+    }
+
 }
