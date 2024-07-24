@@ -35,4 +35,11 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    //build reactive UPDATE Employee REST API
+    @PutMapping("{id}")
+    public Mono<EmployeeDto> updateEmployee(@RequestBody EmployeeDto employeeDto,
+                                            @PathVariable("id") String employeeId) {
+        return employeeService.updateEmployee(employeeDto, employeeId);
+    }
+
 }
