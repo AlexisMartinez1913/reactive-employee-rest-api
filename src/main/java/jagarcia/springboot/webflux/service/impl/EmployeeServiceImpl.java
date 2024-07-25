@@ -37,6 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Flux<EmployeeDto> getAllEmployees() {
         Flux<Employee> employeeFlux = employeeRepository.findAll();
         return employeeFlux
+                //si no hay empleados retorna un empty
                 .map((employee -> EmployeeMapper.mapToEmployeeDto(employee)))
                 .switchIfEmpty(Flux.empty());
     }
@@ -55,5 +56,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return updateEmployee.map((employee -> EmployeeMapper.mapToEmployeeDto(employee)));
 
+    }
+
+    @Override
+    public Mono<Void> deleteEmployee(String employeeId) {
+
+        return employeeRepository.deleteById(employeeId);
     }
 }
