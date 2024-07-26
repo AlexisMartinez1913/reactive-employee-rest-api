@@ -1,7 +1,9 @@
 package jagarcia.springboot.webflux;
 
 import jagarcia.springboot.webflux.dto.EmployeeDto;
+import jagarcia.springboot.webflux.repository.EmployeeRepository;
 import jagarcia.springboot.webflux.service.EmployeeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +19,14 @@ public class EmployeeControllerIntegrationTests {
     private EmployeeService employeeService;
     @Autowired
     private WebTestClient webTestClient;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @BeforeEach
+    public void  before() {
+        System.out.println("Before each test");
+        employeeRepository.deleteAll().subscribe();
+
+    }
     @Test
     public void testSaveEmployee() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -59,8 +69,12 @@ public class EmployeeControllerIntegrationTests {
     }
     @Test
     public void testGetAllEmployees() {
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setFirstName("Karina");
+        employeeDto.setLastName("Guerrero");
+        employeeDto.setEmail("ka@gmail.com");
 
-        
+        employeeService.saveEmployee(employeeDto).block();
 
         webTestClient.get().uri("/api/employees")
                 .accept(MediaType.APPLICATION_JSON)
@@ -69,4 +83,5 @@ public class EmployeeControllerIntegrationTests {
                 .expectBodyList(EmployeeDto.class)
                 .consumeWith(System.out::println);
     }
+
 }
