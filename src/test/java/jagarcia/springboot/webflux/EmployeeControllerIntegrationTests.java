@@ -21,12 +21,24 @@ public class EmployeeControllerIntegrationTests {
     private WebTestClient webTestClient;
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    /*
+    *Este método se ejecuta antes de cada prueba.
+    * Borra todos los empleados en el repositorio para asegurar
+    *  que cada prueba comience con una base de datos limpia.
+     */
     @BeforeEach
     public void  before() {
         System.out.println("Before each test");
         employeeRepository.deleteAll().subscribe();
-
     }
+
+    /*
+    Prueba el endpoint de creación de empleados (POST /api/employees).
+    Envía un EmployeeDto y verifica
+    que la respuesta tenga el estado 201 Created y
+     que el cuerpo de la respuesta coincida con el empleado creado.
+    * */
     @Test
     public void testSaveEmployee() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -48,6 +60,11 @@ public class EmployeeControllerIntegrationTests {
 
     }
 
+    /*
+    Prueba el endpoint de obtención de un empleado por ID (GET /api/employees/{id}).
+    Guarda un empleado, lo recupera por ID y verifica que los detalles sean correctos.
+    * */
+
     @Test
     public void testGetSingleEmployee() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -67,6 +84,12 @@ public class EmployeeControllerIntegrationTests {
                 .jsonPath("$.lastName").isEqualTo(employeeDto.getLastName())
                 .jsonPath("$.email").isEqualTo(employeeDto.getEmail());
     }
+
+    /*
+    Prueba el endpoint de obtención de todos los empleados (GET /api/employees).
+    Guarda un empleado y luego recupera la lista de empleados,
+    verificando que el estado de la respuesta sea 200 OK.
+    * */
     @Test
     public void testGetAllEmployees() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -87,6 +110,11 @@ public class EmployeeControllerIntegrationTests {
                 .expectBodyList(EmployeeDto.class)
                 .consumeWith(System.out::println);
     }
+
+    /*
+    Prueba el endpoint de actualización de un empleado (PUT /api/employees/{id}).
+    Guarda un empleado, lo actualiza y verifica que los detalles actualizados sean correctos.
+    * */
     @Test
     public void testUpdateEmployee() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -114,6 +142,11 @@ public class EmployeeControllerIntegrationTests {
                 .jsonPath("$.email").isEqualTo(updateEmployee.getEmail());
     }
 
+    /*
+    Prueba el endpoint de eliminación de un empleado (DELETE /api/employees/{id}).
+    Guarda un empleado, lo elimina y verifica que el estado de la respuesta sea 204 No Content.
+     */
+
     @Test
     public void testDeleteEmployee() {
         EmployeeDto employeeDto = new EmployeeDto();
@@ -129,6 +162,8 @@ public class EmployeeControllerIntegrationTests {
                 .expectBody()
                 .consumeWith(System.out::println);
 
+
     }
 
 }
+
